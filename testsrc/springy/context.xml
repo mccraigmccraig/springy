@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd"
+       default-init-method="initialise" default-destroy-method="destroy">
+
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetClass">
+            <value>springy.beans.Bean1</value>
+        </property>
+        <property name="targetMethod">
+            <value>staticMethod</value>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetClass">
+            <value>springy.beans.Bean1</value>
+        </property>
+        <property name="targetMethod">
+            <value>staticMethodWithParameters</value>
+        </property>
+        <property name="arguments">
+            <list>
+                <value>20</value>
+                <value>a String</value>
+                <ref bean="bean2"/>
+            </list>
+        </property>
+    </bean>
+
+    <util:list id="l1">
+        <value>1</value>
+        <value>2</value>
+        <value>3</value>
+    </util:list>
+
+    <bean id="bean1" class="springy.beans.Bean1">
+        <property name="bean2" ref="bean2"/>
+        <property name="listProperty" ref="l1"/>
+        <property name="booleanProperty" value="true"/>
+    </bean>
+
+    <alias name="bean1" alias="bean1-verbose"/>
+
+    <bean id="bean2" class="springy.beans.Bean2">
+        <constructor-arg value="Max"/>
+        <constructor-arg value="Pierre"/>
+        <constructor-arg value="45"/>
+    </bean>
+
+    <bean id="bean3" class="springy.beans.Bean3">
+        <constructor-arg value="Vic"/>
+        <constructor-arg ref="bean2"/>
+        <property name="parameters">
+            <list>                
+                <ref bean="bean1"/>
+                <value>A String</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="bean4" class="springy.beans.Bean4">
+        <constructor-arg value="Steve"/>
+        <constructor-arg>
+            <map>
+                <entry key="foo" value="baz"/>
+                <entry key="bean1" value-ref="bean1"/>
+                <entry key="bean2">
+                    <bean class="springy.beans.Bean2">
+                        <constructor-arg value="Gaga"/>
+                        <constructor-arg value="Baba"/>
+                        <constructor-arg value="23"/>
+                    </bean>
+                </entry>
+            </map>
+        </constructor-arg>
+        <property name="anotherBean">
+            <bean name="another" class="springy.beans.Bean3">
+                <constructor-arg value="Pete"/>
+                <constructor-arg ref="bean2"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="bean5" class="springy.beans.Bean5" scope="prototype" init-method="myInit" destroy-method="myDestroy" dependency-check="simple" lazy-init="false" abstract="false" autowire="byType"/>
+
+    <alias name="bean4" alias="bean4-alias"/>
+
+</beans>
