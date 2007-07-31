@@ -4,12 +4,12 @@ Springy lets you use a simple Domain Specific Language (DSL) based on JRuby to w
 See {Wiring up Spring with JRuby}[http://www.trampolinesystems.com/weblog/wiring-up-spring-with-jruby]
 for an introduction.
 
-== Dependencies
+=== Dependencies
 
 Springy requires {JRuby}[http://jruby.codehaus.org] (1.0),
 {Spring 2.0}[http://www.springframework.org] and the {Bean Scripting Framework}[http://jakarta.apache.org/bsf/].
 
-== Usage
+=== Usage
 
 You need to add springy.jar, bsf.jar and jruby-1.0.jar to your classpath.
 Create your context definition and put it somewhere in your classpath. To actually create the context do:
@@ -21,14 +21,14 @@ Create your context definition and put it somewhere in your classpath. To actual
   Resource r = new ClassPathResource("/path/to/context_definition.rb");
   ApplicationContext ctxt = new SpringyContext(r);
 
-  // serialize context to xml
-  String context = ctxt.getContextAsXml();
+  Object myBean = ctxt.getBean("myBean");
 
-== Serializing context to XML
 
-  String serialized = new JRubyApplicationContext(r).getContextAsXml();
+=== Serializing context to XML
 
-== Advanced usage with existing JRuby runtime
+  String serialized = new SpringyContext(r).getContextAsXml();
+
+=== Advanced usage with existing JRuby runtime
 
   import org.springframework.core.io.Resource;
   import springy.context.RuntimeSpringyContext;
@@ -40,7 +40,7 @@ Create your context definition and put it somewhere in your classpath. To actual
 
   ApplicationContext ctxt = new RuntimeSpringyContext(runtime, r);
 
-== Building
+=== Building
 
 To build Springy from the source, you need to have Rake plus the
 {Jerbil}[http://code.trampolinesystems.com/jerbil] extensions
@@ -50,25 +50,25 @@ installed. Once everything is installed, do
 
 in the toplevel directory.
 
-== Example
+=== Example
 
 See the {test cases}[http://svn.trampolinesystems.com/springy/trunk/testsrc/springy/], especially the Ruby context
 {context.rb}[http://svn.trampolinesystems.com/springy/trunk/testsrc/springy/context.rb] and
 its XML equivalent {context.xml}[http://svn.trampolinesystems.com/springy/trunk/testsrc/springy/context.xml].
 
-== FAQ
+=== FAQ
 
 See FAQ[http://code.trampolinesystems.com/springy/wiki/FAQ].
 
-== Contact
+=== Contact
 
 mailto:jan@trampolinesystems.com
 
-== Project homepage
+=== Project homepage
 
 http://code.trampolinesystems.com/springy
 
-== License
+=== License
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 in compliance with the License. You may obtain a copy of the License at
