@@ -91,7 +91,9 @@ module Springy
 
         def validate!
             factory = javax.xml.validation.SchemaFactory.newInstance('http://www.w3.org/2001/XMLSchema');
-            schema_file = javax.xml.transform.stream.StreamSource.new(get_class.get_resource_as_stream('/org/springframework/beans/factory/xml/spring-beans-2.0.xsd'))
+            schema_is = do_get_resource('/org/springframework/beans/factory/xml/spring-beans-2.0.xsd')
+            raise "could not find schema" unless schema_is
+            schema_file = javax.xml.transform.stream.StreamSource.new(schema_is)
             schema = factory.newSchema(schema_file)
             validator = schema.newValidator()
             begin

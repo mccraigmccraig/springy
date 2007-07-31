@@ -38,7 +38,7 @@ public abstract class AbstractContextSerializationTests extends AbstractContextT
     }
 
     protected Resource getContextResource() {
-        return new ClassPathResource("/springy/context.rb");
+        return new ClassPathResource("springy/context.rb");
     }
 
     protected abstract SpringyApplicationContext doCreateContext();

@@ -27,6 +27,6 @@ public class XmlContextTests extends AbstractContextTests {
     }
 
     protected ConfigurableApplicationContext createContext() {
-        return new ClassPathXmlApplicationContext(new String[]{"/springy/context.xml"}, true);
+        return new ClassPathXmlApplicationContext(new String[]{"springy/context.xml"}, true);
     }
 }

@@ -40,11 +40,13 @@ public abstract class AbstractContextTests {
     }
 
 
+    /*
     public void testStaticMethodWithParameters() {
         assertEquals(Bean1.sP1, 20);
         assertEquals(Bean1.sP2, "a String");
         assert Bean1.staticBeanRef instanceof Bean2;
     }
+    */
 
     public void testGetList() {
         Bean1 b1 = (Bean1) ctxt.getBean("bean1");

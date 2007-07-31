@@ -1,0 +1,33 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="all tests">
+
+    <test name="springy context tests">
+        <classes>
+            <class name="springy.SpringyContextTests"/>
+            <class name="springy.SpringyContextSerializationTests"/>
+        </classes>
+    </test>
+
+    <test name="runtime springy context tests">
+        <classes>
+            <class name="springy.RuntimeSpringyContextTests"/>
+            <class name="springy.RuntimeSpringyContextSerializationTests"/>
+        </classes>
+    </test>
+
+
+    <test name="xml context tests">
+        <classes>
+            <class name="springy.XmlContextTests"/>
+        </classes>
+    </test>
+
+    <test name="error tests">
+        <classes>
+            <class name="springy.ErrorHandlingTests"/>
+        </classes>
+    </test>
+
+
+</suite>

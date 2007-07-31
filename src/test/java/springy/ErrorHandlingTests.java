@@ -12,6 +12,6 @@ public class ErrorHandlingTests {
 
     @Test(expectedExceptions = BeanDefinitionParsingException.class)
     public void testErrorHandling() {
-        ApplicationContext ctxt = new SpringyContext(new ClassPathResource("/springy/context-with-errors.rb"));
+        ApplicationContext ctxt = new SpringyContext(new ClassPathResource("springy/context-with-errors.rb"));
     }
 }

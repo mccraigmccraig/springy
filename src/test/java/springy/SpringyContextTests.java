@@ -32,7 +32,7 @@ public class SpringyContextTests extends AbstractContextTests {
     }
 
     protected ConfigurableApplicationContext createContext() throws Exception {
-        return new SpringyContext(new ClassPathResource("/springy/context.rb"));
+        return new SpringyContext(new ClassPathResource("springy/context.rb"));
     }
 
     public void testInlineXml() {
