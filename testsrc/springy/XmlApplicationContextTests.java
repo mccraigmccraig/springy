@@ -26,17 +26,10 @@ public class XmlApplicationContextTests extends AbstractApplicationContextTests 
     @AfterClass
     public void afterClass() throws Exception
     {
-        ((ConfigurableApplicationContext)ctxt).close();
+        ctxt.close();
     }
 
-    protected ApplicationContext createContext() {
+    protected ConfigurableApplicationContext createContext() {
         return new ClassPathXmlApplicationContext(new String[]{"/springy/context.xml"}, true);
     }
-
-
-    public void testFoo() {
-
-    }
-
-
 }

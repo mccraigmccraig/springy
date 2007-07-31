@@ -1,17 +1,15 @@
 package springy;
 
 import static org.testng.Assert.assertEquals;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.annotations.AfterClass;
-import org.apache.bsf.BSFManager;
 import springy.beans.Bean1;
 import springy.beans.Bean4;
-import springy.context.JRubyApplicationContext;
+import springy.context.SpringyContext;
 
 import java.util.Map;
 
@@ -19,7 +17,7 @@ import java.util.Map;
  * JRubyApplicationContextTests specific tests.
  */
 @Test
-public class JRubyApplicationContextTests extends AbstractApplicationContextTests {
+public class SpringyContextTests extends AbstractApplicationContextTests {
 
     @BeforeClass
     public void beforeClass() throws Exception {
@@ -30,11 +28,11 @@ public class JRubyApplicationContextTests extends AbstractApplicationContextTest
 
     @AfterClass
     public void afterClass() throws Exception {
-        ((ConfigurableApplicationContext) ctxt).close();
+        ctxt.close();
     }
 
-    protected ApplicationContext createContext() throws Exception {
-        return new JRubyApplicationContext(new ClassPathResource("/springy/context.rb"));
+    protected ConfigurableApplicationContext createContext() throws Exception {
+        return new SpringyContext(new ClassPathResource("/springy/context.rb"));
     }
 
     public void testInlineXml() {
@@ -55,7 +53,7 @@ public class JRubyApplicationContextTests extends AbstractApplicationContextTest
                         "    b.new(\"name\", {}, [])\n" +
                         "end";
 
-        JRubyApplicationContext ctxt = new JRubyApplicationContext(context);
+        SpringyContext ctxt = new SpringyContext(context);
 
         Bean4 b4 = (Bean4) ctxt.getBean("bean1_emptylist_in_ctor");
         assert b4.getMap().isEmpty();
@@ -75,24 +73,18 @@ public class JRubyApplicationContextTests extends AbstractApplicationContextTest
     @Test(expectedExceptions = BeanDefinitionParsingException.class)
     public void testEnforceInit() {
         String context = "bean :bean1, \"springy.beans.Bean1\", :init_method=\"jjlkjkl\"";
-        JRubyApplicationContext ctxt = new JRubyApplicationContext(context);
+        SpringyContext ctxt = new SpringyContext(context);
     }
 
     public void testBeanWithoutBlock() {
         String context = "bean :a_bean, \"springy.beans.Bean1\"";
-        JRubyApplicationContext ctxt = new JRubyApplicationContext(context);
+        SpringyContext ctxt = new SpringyContext(context);
     }
 
     public void testResourceExists() {
         String context = "bean :bean1, 'springy.beans.Bean1' if resource_exists?('/springy/a_map.yml')";
-        JRubyApplicationContext ctxt = new JRubyApplicationContext(context);
+        SpringyContext ctxt = new SpringyContext(context);
         assert ctxt.getBean("bean1") instanceof Bean1;
-    }
-
-    public void testSpringyContextWasSet() {
-        Bean1 b = (Bean1) ctxt.getBean("bean1");
-        assert b.context != null;
-        assert b.context instanceof BSFManager;
     }
 
     public void testBeforeInitCalled() {

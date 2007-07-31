@@ -3,7 +3,7 @@
 namespace :maintainer do
     WWWROOT             = "/var/www/code.trampolinesystems.com"
     SVNROOT             = "http://svn.trampolinesystems.com/springy/trunk"
-    SVERSION            = "0.2"
+    SVERSION            = "0.3"
     DISTBUILDDIR        = "/tmp"
     TMPDIR              = File.join(DISTBUILDDIR, "springy-#{SVERSION}")
     BALLSDIR            = File.join(BUILD_DIR, "balls")

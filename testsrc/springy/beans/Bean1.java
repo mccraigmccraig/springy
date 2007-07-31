@@ -1,12 +1,8 @@
 package springy.beans;
 
-import org.apache.bsf.BSFManager;
-
 import java.util.List;
 
-import springy.context.SpringyAware;
-
-public class Bean1 implements IBean, SpringyAware {
+public class Bean1 implements IBean {
 
     private boolean initialised = false;
     private boolean destroyed = false;
@@ -100,11 +96,6 @@ public class Bean1 implements IBean, SpringyAware {
     public void doSomething(int foo) {
         //System.err.println("doSomething(" + foo + ")");
         this.something = foo;
-    }
-
-    public void setSpringyContext(Object context) {
-        //System.err.println("context="+context);
-        this.context = context;
     }
 
     public void setBeforeInitCalled() {

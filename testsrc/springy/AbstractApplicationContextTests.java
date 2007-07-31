@@ -2,7 +2,6 @@ package springy;
 
 import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import springy.beans.Bean1;
 import springy.beans.Bean2;
@@ -18,9 +17,9 @@ import java.util.Arrays;
  */
 @Test
 public abstract class AbstractApplicationContextTests {
-    protected ApplicationContext ctxt;
+    protected ConfigurableApplicationContext ctxt;
 
-    protected abstract ApplicationContext createContext() throws Exception;
+    protected abstract ConfigurableApplicationContext createContext() throws Exception;
 
     public void testGetBeans() throws Exception {
         assert ctxt != null : getClass().getSimpleName();
@@ -105,7 +104,7 @@ public abstract class AbstractApplicationContextTests {
     }
 
     public void testCreateAndDestroy() throws Exception {
-        ConfigurableApplicationContext context = (ConfigurableApplicationContext) createContext();
+        ConfigurableApplicationContext context = createContext();
         Bean1 b1 = (Bean1) context.getBean("bean1");
         assert b1.wasInitialised();
         context.close();

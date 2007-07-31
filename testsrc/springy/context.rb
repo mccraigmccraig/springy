@@ -1,6 +1,6 @@
 defaults :init_method =>"initialise", :destroy_method=>"destroy"
 
-require('/springy/config.rb')
+require('springy/config.rb')
 
 bean "org.springframework.beans.factory.config.MethodInvokingFactoryBean" do |b|
     b.targetClass "springy.beans.Bean1"
@@ -56,7 +56,7 @@ bean :bean4, "springy.beans.Bean4" do
 end
 
 bean :bean4_yaml, "springy.beans.Bean4" do |b|
-    b.new("Steve", yaml("/springy/a_map.yml"))
+    b.new("Steve", yaml("/springy/a_map.yml")) 
 end
 
 bean :bean5, "springy.beans.Bean5", :scope=>'prototype', :init_method=>'myInit', :destroy_method=>'myDestroy', :dependency_check=>'simple', :lazy_init=>true, :abstract=>true, :autowire=>'byType'

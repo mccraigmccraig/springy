@@ -1,5 +1,12 @@
 = Springy Changelog
 
+== Version 0.3 (31/07/2007)
+
+* now requires JRuby 1.0
+* Spring Framework updated to 2.0.6
+* RuntimeSpringyContext to use direct JRuby programming
+* renaming of some classes
+
 == Version 0.2 (21/03/2007)
 
 * now requires JRuby 0.9.8

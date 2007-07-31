@@ -6,20 +6,20 @@ for an introduction.
 
 == Dependencies
 
-Springy requires {JRuby}[http://jruby.codehaus.org] (0.9.8),
+Springy requires {JRuby}[http://jruby.codehaus.org] (1.0),
 {Spring 2.0}[http://www.springframework.org] and the {Bean Scripting Framework}[http://jakarta.apache.org/bsf/].
 
 == Usage
 
-You need to add springy.jar, bsf.jar and jruby-0.9.8.jar to your classpath.
+You need to add springy.jar, bsf.jar and jruby-1.0.jar to your classpath.
 Create your context definition and put it somewhere in your classpath. To actually create the context do:
 
   import org.springframework.core.io.Resource;
-  import springy.context.JRubyApplicationContext;
+  import springy.context.SpringyContext;
 
   // ...
   Resource r = new ClassPathResource("/path/to/context_definition.rb");
-  ApplicationContext ctxt = new JRubyApplicationContext(r);
+  ApplicationContext ctxt = new SpringyContext(r);
 
   // serialize context to xml
   String context = ctxt.getContextAsXml();
@@ -27,7 +27,19 @@ Create your context definition and put it somewhere in your classpath. To actual
 == Serializing context to XML
 
   String serialized = new JRubyApplicationContext(r).getContextAsXml();
-  ;
+
+== Advanced usage with existing JRuby runtime
+
+  import org.springframework.core.io.Resource;
+  import springy.context.RuntimeSpringyContext;
+  import org.jruby.Ruby;
+
+  // ...
+  Resource r = new ClassPathResource("/path/to/context_definition.rb");
+  Ruby runtime = Ruby.getDefaultInstance();
+
+  ApplicationContext ctxt = new RuntimeSpringyContext(runtime, r);
+
 == Building
 
 To build Springy from the source, you need to have Rake plus the

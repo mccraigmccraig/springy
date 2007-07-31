@@ -123,7 +123,6 @@ module Springy
             block = INITIALISERS[name]
             block.call(bean) if block
             $springy_before_init.call(bean, name) if $springy_before_init
-            bean.set_springy_context($bsf_manager) if bean.respond_to?(:set_springy_context)
             bean
         end
 

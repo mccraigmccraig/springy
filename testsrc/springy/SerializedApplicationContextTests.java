@@ -1,26 +1,24 @@
 package springy;
 
-import static org.testng.Assert.assertEquals;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.Test;
+import org.jruby.Ruby;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractXmlApplicationContext;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import static org.testng.Assert.assertEquals;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import springy.context.JRubyApplicationContext;
+import org.w3c.dom.NodeList;
+import springy.context.RuntimeSpringyContext;
+import springy.context.SpringyApplicationContext;
 
 import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathConstants;
-
-import com.sun.org.apache.xpath.internal.NodeSet;
+import javax.xml.xpath.XPathFactory;
 
 /**
  * Tests XML serialization feature of JRubyApplicationContext.
@@ -40,12 +38,13 @@ public class SerializedApplicationContextTests extends AbstractApplicationContex
 
     @AfterClass
     public void afterClass() throws Exception {
-        ((ConfigurableApplicationContext) ctxt).close();
+        ctxt.close();
     }
 
-    protected ApplicationContext createContext() throws Exception {
+    protected ConfigurableApplicationContext createContext() throws Exception {
         //create a jruby context, serialize it to xml, and recreate context from xml
-        JRubyApplicationContext jrubyCtxt = new JRubyApplicationContext(new ClassPathResource("/springy/context.rb"), false);
+//        JRubyApplicationContext jrubyCtxt = new BSFJRubyApplicationContext(new ClassPathResource("/springy/context.rb"), false);
+        SpringyApplicationContext jrubyCtxt = new RuntimeSpringyContext(Ruby.getDefaultInstance(), new ClassPathResource("/springy/context.rb"), false);
 
         serializedContext = jrubyCtxt.getContextAsXml();
         serializedContextAsDoc = jrubyCtxt.getContextAsDocument();

@@ -20,9 +20,11 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * A Spring application context configured with a Ruby DSL.
+ * A Spring application context configured with a Ruby DSL. It uses the
+ * (<a href="http://jakarta.apache.org/bsf/">Bean Scripting Framework<a>).
  */
-public class JRubyApplicationContext extends AbstractRefreshableApplicationContext {
+public class SpringyContext extends AbstractRefreshableApplicationContext
+        implements SpringyApplicationContext {
 
     private String serializedContext;
     private Document serializedContextAsDocument;
@@ -37,14 +39,14 @@ public class JRubyApplicationContext extends AbstractRefreshableApplicationConte
     /**
      * @param context as a string. used for testing.
      */
-    public JRubyApplicationContext(String context) {
+    public SpringyContext(String context) {
         this(new ByteArrayResource(context.getBytes()));
     }
 
     /**
      * @param aContextResource where to find the ruby configuration
      */
-    public JRubyApplicationContext(Resource aContextResource) {
+    public SpringyContext(Resource aContextResource) {
         this(aContextResource, true);
     }
 
@@ -52,8 +54,18 @@ public class JRubyApplicationContext extends AbstractRefreshableApplicationConte
      * @param aContextResource where to find the ruby configuration
      * @param refresh          refreshs the context immediately
      */
-    public JRubyApplicationContext(Resource aContextResource, boolean refresh) {
-        bsfManager = new BSFManager();
+    public SpringyContext(Resource aContextResource, boolean refresh) {
+        this(aContextResource, refresh, new BSFManager());
+    }
+
+    /**
+     * Use this constructor if you need to reuse an existing BSFManager.
+     * @param aContextResource
+     * @param refresh
+     * @param bsfManager
+     */
+    public SpringyContext(Resource aContextResource, boolean refresh, BSFManager bsfManager) {
+        this.bsfManager = bsfManager;
 
         this.contextResource = aContextResource;
 
@@ -82,14 +94,12 @@ public class JRubyApplicationContext extends AbstractRefreshableApplicationConte
         try {
             bsfManager.declareBean("bean_factory", beanFactory, DefaultListableBeanFactory.class);
             bsfManager.declareBean("system_properties", System.getProperties(), Map.class);
-            bsfManager.declareBean("bsf_manager", bsfManager, BSFManager.class);
 
             String springy = IOHelper.inputStreamToString(getClass().getResourceAsStream("springy.rb"));
             String ctxt = IOHelper.inputStreamToString(contextResource.getInputStream());
 
             bsfManager.eval("ruby", "(java-springy)", 1, 1, springy);
             bsfManager.eval("ruby", "(java-context)", 1, 1, ctxt);
-
         } catch (BSFException e) {
             //JRubyHelper.printBsfException(e);
 
@@ -114,7 +124,7 @@ public class JRubyApplicationContext extends AbstractRefreshableApplicationConte
     /**
      * Serializes the context to XML.
      */
-    private void serializeContext() {
+    private synchronized void serializeContext() {
         if (serializedContext == null || serializedContextAsDocument == null) {
             if (!isActive())
                 refreshBeanFactory();
