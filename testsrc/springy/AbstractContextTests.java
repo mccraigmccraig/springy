@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Arrays;
 
 /**
- * General test conditions - implemented by XmlApplicationContext as well
- * as JRubyApplicationContext.
+ * General test conditions - implemented by XmlContext as well
+ * as SpringyContext.
  */
 @Test
-public abstract class AbstractApplicationContextTests {
+public abstract class AbstractContextTests {
     protected ConfigurableApplicationContext ctxt;
 
     protected abstract ConfigurableApplicationContext createContext() throws Exception;
@@ -51,7 +51,7 @@ public abstract class AbstractApplicationContextTests {
         List l = b1.getListProperty();
         assert l != null;
         assert l.size() == 3;
-        assertEquals(l, Arrays.asList(new String[]{"1", "2", "3"}));
+        assertEquals(l, Arrays.asList("1", "2", "3"));
     }
 
     public void testCtor() {
@@ -92,7 +92,7 @@ public abstract class AbstractApplicationContextTests {
         assert b4.getAnotherBean() instanceof Bean3;
         Bean3 another = (Bean3) b4.getAnotherBean();
         assertEquals(another.getName(), "Pete");
-        assert another.getBean2() instanceof Bean2;
+        assert another.getBean2() != null;
     }
 
     public void testAlias() {

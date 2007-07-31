@@ -17,7 +17,7 @@ import java.util.Map;
  * JRubyApplicationContextTests specific tests.
  */
 @Test
-public class SpringyContextTests extends AbstractApplicationContextTests {
+public class SpringyContextTests extends AbstractContextTests {
 
     @BeforeClass
     public void beforeClass() throws Exception {

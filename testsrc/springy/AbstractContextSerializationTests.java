@@ -1,6 +1,5 @@
 package springy;
 
-import org.jruby.Ruby;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.AbstractXmlApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
@@ -9,11 +8,9 @@ import org.springframework.core.io.Resource;
 import static org.testng.Assert.assertEquals;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import springy.context.RuntimeSpringyContext;
 import springy.context.SpringyApplicationContext;
 
 import javax.xml.xpath.XPath;
@@ -21,10 +18,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 /**
- * Tests XML serialization feature of JRubyApplicationContext.
+ * Tests XML serialization feature of SpringyApplicationContext.
  */
-@Test
-public class SerializedApplicationContextTests extends AbstractApplicationContextTests {
+public abstract class AbstractContextSerializationTests extends AbstractContextTests {
 
     private String serializedContext;
     private Document serializedContextAsDoc;
@@ -41,11 +37,15 @@ public class SerializedApplicationContextTests extends AbstractApplicationContex
         ctxt.close();
     }
 
+    protected Resource getContextResource() {
+        return new ClassPathResource("/springy/context.rb");
+    }
+
+    protected abstract SpringyApplicationContext doCreateContext();
+
     protected ConfigurableApplicationContext createContext() throws Exception {
         //create a jruby context, serialize it to xml, and recreate context from xml
-//        JRubyApplicationContext jrubyCtxt = new BSFJRubyApplicationContext(new ClassPathResource("/springy/context.rb"), false);
-        SpringyApplicationContext jrubyCtxt = new RuntimeSpringyContext(Ruby.getDefaultInstance(), new ClassPathResource("/springy/context.rb"), false);
-
+        SpringyApplicationContext jrubyCtxt = doCreateContext();
         serializedContext = jrubyCtxt.getContextAsXml();
         serializedContextAsDoc = jrubyCtxt.getContextAsDocument();
         return new StringApplicationContext(serializedContext);

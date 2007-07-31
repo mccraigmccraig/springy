@@ -1,20 +1,17 @@
 package springy;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import static org.testng.Assert.assertEquals;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.annotations.AfterClass;
-import springy.beans.MyInterface;
-import springy.beans.Bean1;
 
 /**
  * XmlApplicationContext specific tests.
  */
 @Test
-public class XmlApplicationContextTests extends AbstractApplicationContextTests {
+public class XmlContextTests extends AbstractContextTests {
 
     @BeforeClass
     public void beforeClass() throws Exception {
