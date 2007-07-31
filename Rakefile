@@ -6,8 +6,8 @@ require 'jerbil/testng_task'
 require 'jerbil/javadoc_task'
 require 'jerbil/jar_task'
 
-SOURCE_DIR          = "src"
-TEST_SOURCE_DIR     = "testsrc"
+SOURCE_DIR          = "src/main/java"
+TEST_SOURCE_DIR     = "src/test/java"
 BUILD_DIR           = "build"
 DIST_DIR           	= "dist"
 JAVA_BUILD_DIR      = "#{BUILD_DIR}/java"
