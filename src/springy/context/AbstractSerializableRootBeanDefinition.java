@@ -5,7 +5,7 @@ import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.MutablePropertyValues;
 
 /**
- * TODO: comment
+ * Placeholder class: implemented/extended by JRuby.
  */
 public abstract class AbstractSerializableRootBeanDefinition extends RootBeanDefinition implements XmlSerializable {
 }

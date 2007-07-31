@@ -20,7 +20,8 @@ namespace :maintainer do
         rm_rf TMPDIR
         sh "svn export #{SVNROOT} #{TMPDIR}"
         Dir.chdir(TMPDIR) do
-            sh "rake dist javadoc"
+            ["dist", "javadoc", "rdoc"].each { |t| sh "rake #{t}"}
+            cp_r JAVADOC_DIR, TMPDIR
             sh "rm *.ipr *.iml"
             rm_rf "externals"
             rm_rf BUILD_DIR

@@ -6,9 +6,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
 import springy.context.RuntimeSpringyContext;
 
-/**
- * TODO: comment
- */
 @Test
 public class RuntimeSpringyContextTest extends SpringyContextTests {
 

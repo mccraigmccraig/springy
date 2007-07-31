@@ -4,7 +4,7 @@ import org.springframework.beans.factory.support.ManagedList;
 import org.w3c.dom.Document;
 
 /**
- * TODO: comment
+ * Placeholder class: implemented/extended by JRuby.
  */
 public abstract class AbstractSerializableManagedList extends ManagedList implements XmlSerializable {
 }

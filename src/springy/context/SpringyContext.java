@@ -20,8 +20,9 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * A Spring application context configured with a Ruby DSL. It uses the
- * (<a href="http://jakarta.apache.org/bsf/">Bean Scripting Framework<a>).
+ * A Spring application context configured with a Ruby DSL. Internally, it uses the
+ * (<a href="http://jakarta.apache.org/bsf/">Bean Scripting Framework<a>) to access
+ * JRuby.
  */
 public class SpringyContext extends AbstractRefreshableApplicationContext
         implements SpringyApplicationContext {

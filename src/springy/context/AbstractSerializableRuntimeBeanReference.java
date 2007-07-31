@@ -3,7 +3,7 @@ package springy.context;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 
 /**
- * TODO: comment
+ * Placeholder class: implemented/extended by JRuby.
  */
 public abstract class AbstractSerializableRuntimeBeanReference extends RuntimeBeanReference implements XmlSerializable{
     /**

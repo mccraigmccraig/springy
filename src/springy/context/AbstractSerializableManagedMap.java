@@ -5,7 +5,7 @@ import org.springframework.beans.factory.support.ManagedMap;
 import java.util.Map;
 
 /**
- * TODO: comment
+ * Placeholder class: implemented/extended by JRuby.
  */
 public abstract class AbstractSerializableManagedMap extends ManagedMap implements XmlSerializable {
     public AbstractSerializableManagedMap() {
