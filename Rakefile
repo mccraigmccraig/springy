@@ -6,14 +6,16 @@ require 'jerbil/testng_task'
 require 'jerbil/javadoc_task'
 require 'jerbil/jar_task'
 
-SOURCE_DIR          = "src/main/java"
+MAIN_SOURCE_DIR     = "src/main/java"
+MAIN_RESOURCES_DIR  = "src/main/resources"
 TEST_SOURCE_DIR     = "src/test/java"
+TEST_RESOURCES_DIR  = "src/test/resources"
 BUILD_DIR           = "build"
 DIST_DIR           	= "dist"
 JAVA_BUILD_DIR      = "#{BUILD_DIR}/java"
 JAVADOC_DIR         = "#{BUILD_DIR}/javadoc"
-JAVA_FILES          = JavaFileList.new(SOURCE_DIR,      JAVA_BUILD_DIR)
-JAVA_TEST_FILES     = JavaFileList.new(TEST_SOURCE_DIR, JAVA_BUILD_DIR)
+JAVA_FILES          = JavaFileList.new(MAIN_SOURCE_DIR, JAVA_BUILD_DIR, MAIN_RESOURCES_DIR)
+JAVA_TEST_FILES     = JavaFileList.new(TEST_SOURCE_DIR, JAVA_BUILD_DIR, TEST_RESOURCES_DIR)
 
 CLASSPATH           = FileList[ JAVA_BUILD_DIR, "./lib/*.jar" ]
 DISTJAR             = File.join(Rake.original_dir, DIST_DIR, "springy.jar")
@@ -52,7 +54,7 @@ Jerbil::TestNG::TestNGTask.new(:test) do |t|
 end
 
 Jerbil::JavaDocTask.new do |t|
-  t.sourcepath = SOURCE_DIR
+  t.sourcepath = MAIN_SOURCE_DIR
   t.dstdir = JAVADOC_DIR
   t.depends_on :compile
   t.subpackages = "springy"
