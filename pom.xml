@@ -5,6 +5,8 @@
     <artifactId>springy</artifactId>
     <packaging>jar</packaging>
     <version>0.3</version>
+    <name>Springy</name>
+    <url>http://code.trampolinesystems.com/springy</url>
 
     <build>
         <plugins>
@@ -31,24 +33,9 @@
                     </suiteXmlFiles>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <file>target/springy-0.3.jar</file>
-                    <url>scp://trampolinesystems.com:/var/www/code.trampolinesystems.com/maven2_repositories/inhouse</url>
-                    <packaging>jar</packaging>
-                    <artifactId>springy</artifactId>
-                    <repositoryId>inhouse</repositoryId>
-                    <groupId>com.trampolinesystems</groupId>
-                    <version>0.3</version>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
-    <name>Springy</name>
-    <url>http://code.trampolinesystems.com/springy</url>
     <dependencies>
         <dependency>
             <groupId>org.jruby</groupId>
