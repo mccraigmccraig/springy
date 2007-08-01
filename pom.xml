@@ -1,8 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.trampolinesystems.springy</groupId>
+    <groupId>com.trampolinesystems</groupId>
     <artifactId>springy</artifactId>
+    <packaging>jar</packaging>
+    <version>0.3</version>
 
     <build>
         <plugins>
@@ -29,11 +31,22 @@
                     </suiteXmlFiles>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <file>target/springy-0.3.jar</file>
+                    <url>scp://trampolinesystems.com:/var/www/code.trampolinesystems.com/maven2_repositories/inhouse</url>
+                    <packaging>jar</packaging>
+                    <artifactId>springy</artifactId>
+                    <repositoryId>inhouse</repositoryId>
+                    <groupId>com.trampolinesystems</groupId>
+                    <version>0.3</version>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
-    <packaging>jar</packaging>
-    <version>0.3</version>
     <name>Springy</name>
     <url>http://code.trampolinesystems.com/springy</url>
     <dependencies>
@@ -73,4 +86,12 @@
             <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
         </pluginRepository>
     </pluginRepositories>
+
+    <distributionManagement>
+        <repository>
+            <id>inhouse</id>
+            <name>inhouse release repository</name>
+            <url>scp://trampolinesystems.com:/var/www/code.trampolinesystems.com/maven2_repositories/inhouse</url>
+        </repository>
+    </distributionManagement>
 </project>

@@ -41,6 +41,7 @@ public abstract class AbstractContextTests {
 
 
     /*
+    // why does this fail when run from maven?
     public void testStaticMethodWithParameters() {
         assertEquals(Bean1.sP1, 20);
         assertEquals(Bean1.sP2, "a String");
