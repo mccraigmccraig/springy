@@ -54,12 +54,12 @@ public abstract class AbstractContextSerializationTests extends AbstractContextT
     public void testDocument() throws Exception {
         assert serializedContextAsDoc != null;
         NodeList bean = serializedContextAsDoc.getElementsByTagName("bean");
-        assertEquals(bean.getLength(), 13);
+        assertEquals(bean.getLength(), 14);
 
 
         assertEquals(serializedContextAsDoc.getChildNodes().getLength(), 2);
         // 12 toplevel bean definitions
-        assertEquals(serializedContextAsDoc.getChildNodes().item(1).getChildNodes().getLength(), 12);
+        assertEquals(serializedContextAsDoc.getChildNodes().item(1).getChildNodes().getLength(), 13);
     }
     
     public void testBeanAttributesProperlySerialized() throws Exception {

@@ -24,10 +24,6 @@ module Springy
         :init_method => nil,
         :destroy_method => nil }
 
-    # JRuby initialisers defined for beans.
-    INITIALISERS = Hash.new
-
-
     # A Springy specific bean definition, subclassing Spring's RootBeanDefinition.
     #
     class BeanDef < Java::springy.context.AbstractSerializableRootBeanDefinition
@@ -111,7 +107,7 @@ module Springy
 
         # Registers an initialiser for the given bean.        
         def initialiser(*args, &block)
-            INITIALISERS[@bean_id] = block
+            $initializers[@bean_id] = block
         end
     end
 
@@ -120,7 +116,7 @@ module Springy
         include Java::org.springframework.beans.factory.config.BeanPostProcessor
 
         def postProcessBeforeInitialization(bean, name)
-            block = INITIALISERS[name]
+            block = $initializers[name]
             block.call(bean) if block
             $springy_before_init.call(bean, name) if $springy_before_init
             bean
@@ -305,7 +301,6 @@ end
 #toplevel init stuff
 
 include Springy
-register_post_processor(InitialiserPostProcessor.new)
 
 
 

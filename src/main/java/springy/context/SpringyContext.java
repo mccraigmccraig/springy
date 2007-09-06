@@ -96,7 +96,7 @@ public class SpringyContext extends AbstractRefreshableApplicationContext
             bsfManager.declareBean("bean_factory", beanFactory, DefaultListableBeanFactory.class);
             bsfManager.declareBean("system_properties", System.getProperties(), Map.class);
 
-            String springy = IOHelper.inputStreamToString(getClass().getResourceAsStream("springy.rb"));
+            String springy = "load 'springy/context/springy_parse_prepare.rb'";
             String ctxt = IOHelper.inputStreamToString(contextResource.getInputStream());
 
             bsfManager.eval("ruby", "(java-springy)", 1, 1, springy);

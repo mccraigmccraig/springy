@@ -7,6 +7,6 @@ import org.springframework.core.io.ClassPathResource;
 
 public class RuntimeSpringyContextSerializationTests extends AbstractContextSerializationTests {
     protected SpringyApplicationContext doCreateContext() {
-        return new RuntimeSpringyContext(Ruby.getDefaultInstance(), getContextResource(), false);
+        return new RuntimeSpringyContext(Ruby.getDefaultInstance(), false, getContextResource() );
     }
 }

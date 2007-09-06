@@ -44,7 +44,7 @@ public class SpringyContextTests extends AbstractContextTests {
 
     public void testRubyInitialiser() {
         Bean1 bean1 = (Bean1) ctxt.getBean("bean1");
-        assert bean1.something == 22;
+        assertEquals( bean1.something , 22 );
     }
 
     public void testErrorWithEmptyListsInCtor() {

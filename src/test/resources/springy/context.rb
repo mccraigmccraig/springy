@@ -76,3 +76,5 @@ inline_xml(%q{<beans><bean id="bean1-3" class="springy.beans.Bean1"/></beans>})
 before_init do |b, n|
     b.set_before_init_called if b.respond_to?(:set_before_init_called)
 end
+
+bean :bean6, "springy.beans.Bean6"
