@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 /**
  * General test conditions - implemented by XmlContext as well
- * as SpringyContext.
+ * as BSFSpringyContext.
  */
 @Test
 public abstract class AbstractContextTests {

@@ -3,6 +3,7 @@ package springy.context;
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 import org.jruby.RubyArray;
+import org.jruby.Ruby;
 import org.jruby.exceptions.RaiseException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
@@ -24,51 +25,70 @@ import java.util.Map;
  * (<a href="http://jakarta.apache.org/bsf/">Bean Scripting Framework<a>) to access
  * JRuby.
  */
-public class SpringyContext extends AbstractRefreshableApplicationContext
+public class BSFSpringyContext
+        extends AbstractSpringyApplicationContext
         implements SpringyApplicationContext {
-
-    private String serializedContext;
-    private Document serializedContextAsDocument;
 
     static {
         BSFManager.registerScriptingEngine("ruby", "org.jruby.javasupport.bsf.JRubyEngine", new String[]{"rb"});
     }
 
+    private static BSFSpringyContext parentContext( BSFManager bsfManager, boolean refresh,  Resource... resources )
+    {
+        BSFSpringyContext parentContext = null;
+        if ( resources.length > 1 )
+        {
+            // give all but the last resource to the parent constructor...
+            Resource[] parentResources;
+            parentResources = new Resource[ resources.length - 1 ];
+            System.arraycopy( resources , 0 , parentResources , 0 , parentResources.length );
+
+            parentContext = new BSFSpringyContext( bsfManager, refresh, parentResources );
+        }
+
+        return parentContext;
+    }
+
+    private String serializedContext;
+    private Document serializedContextAsDocument;
+
     private Resource contextResource;
     private BSFManager bsfManager;
 
     /**
-     * @param context as a string. used for testing.
+     * @param contexts as a string. used for testing.
      */
-    public SpringyContext(String context) {
-        this(new ByteArrayResource(context.getBytes()));
+    public BSFSpringyContext(String... contexts) {
+        this(stringArrayToResourceArray( contexts ));
     }
 
     /**
-     * @param aContextResource where to find the ruby configuration
+     * @param contextResources where to find the ruby configuration
      */
-    public SpringyContext(Resource aContextResource) {
-        this(aContextResource, true);
+    public BSFSpringyContext(Resource... contextResources) {
+        this(true , contextResources);
     }
 
     /**
-     * @param aContextResource where to find the ruby configuration
+     * @param contextResources where to find the ruby configuration
      * @param refresh          refreshs the context immediately
      */
-    public SpringyContext(Resource aContextResource, boolean refresh) {
-        this(aContextResource, refresh, new BSFManager());
+    public BSFSpringyContext(boolean refresh, Resource... contextResources) {
+        this(new BSFManager() , refresh,  contextResources );
     }
 
     /**
      * Use this constructor if you need to reuse an existing BSFManager.
-     * @param aContextResource
+     * @param contextResources
      * @param refresh
      * @param bsfManager
      */
-    public SpringyContext(Resource aContextResource, boolean refresh, BSFManager bsfManager) {
+    public BSFSpringyContext(BSFManager bsfManager, boolean refresh , Resource... contextResources) {
+        super( parentContext(  bsfManager, refresh , contextResources )  );
+
         this.bsfManager = bsfManager;
 
-        this.contextResource = aContextResource;
+        this.contextResource = thisContextResource( contextResources );
 
         if (refresh) {
             refresh();

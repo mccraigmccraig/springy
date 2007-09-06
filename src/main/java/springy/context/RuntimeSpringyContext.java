@@ -31,19 +31,9 @@ import java.util.HashSet;
  * to use this instead of creating a new one.
  *
  */
-public class RuntimeSpringyContext extends AbstractRefreshableApplicationContext
+public class RuntimeSpringyContext extends AbstractSpringyApplicationContext
         implements SpringyApplicationContext {
 
-
-    private static Resource[] stringArrayToResourceArray( String... context )
-    {
-        Resource[] resources = new Resource[ context.length ];
-        for(int i = 0 ; i < context.length ; i++ )
-        {
-            resources[ i ] = new ByteArrayResource( context[ i ].getBytes() );
-        }
-        return resources;
-    }
 
     private static RuntimeSpringyContext parentContext( Ruby runtime, boolean refresh,  Resource... resources )
     {
@@ -61,18 +51,11 @@ public class RuntimeSpringyContext extends AbstractRefreshableApplicationContext
         return parentContext;
     }
 
-    private static Resource thisContextResource( Resource... resources )
-    {
-        return resources[ resources.length -1 ];
-    }
-
     private String serializedContext;
     private Document serializedContextAsDocument;
 
     private Resource contextResource;
     private Ruby runtime;
-
-    private boolean dirty = false;
 
     /**
      * @param context as a string. used for testing.
@@ -174,77 +157,5 @@ public class RuntimeSpringyContext extends AbstractRefreshableApplicationContext
                     }
                 });
 
-    }
-
-    synchronized public void markDirty()
-    {
-        dirty = true;
-    }
-
-    private Object getBeanAndMarkDirtyImpl( String name ) throws BeansException
-    {
-        Object bean = getBean( name );
-        markDirty();
-        return bean;
-    }
-
-
-    /** get a bean, and mark it as dirty... later, a call to <code>refreshAllDirtyContexts</code>
-     * can be used to refresh all ApplicationContexts in the chain which contain dirty beans [
-     * @param name
-     * @return
-     * @throws BeansException
-     */
-    public Object getBeanAndMarkDirty(String name) throws BeansException
-    {
-        ApplicationContext context = this;
-
-        while( context != null )
-        {
-            if ( context.containsLocalBean( name ) )
-            {
-                if ( context instanceof RuntimeSpringyContext )
-                {
-                    RuntimeSpringyContext rsc = (RuntimeSpringyContext)context;
-                    return rsc.getBeanAndMarkDirtyImpl( name );
-                }
-                else
-                {
-                    return context.getBean( name );
-                }
-            }
-
-            context = context.getParent();
-        }
-
-        throw new NoSuchBeanDefinitionException( name );
-    }
-
-    synchronized private void refreshIfDirty()
-    {
-        if ( dirty )
-        {
-            refresh();
-            dirty = false;
-        }
-    }
-
-    /** ascends the chain of contexts, refreshing any ApplicationCntexts containing beans
-     * marked as dirty [ by a <code>getBeanAndDirty</code> call ]
-     */
-    public void refreshAllDirtyContexts()
-    {
-        ApplicationContext context = this;
-
-        while( context != null )
-        {
-            if ( context instanceof RuntimeSpringyContext )
-            {
-                RuntimeSpringyContext rsc = (RuntimeSpringyContext)context;
-                rsc.refreshIfDirty();
-            }
-
-            context = context.getParent();
-        }
     }
 }

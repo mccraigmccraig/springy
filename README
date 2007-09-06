@@ -15,7 +15,7 @@ You need to add springy.jar, bsf.jar and jruby-1.0.jar to your classpath.
 Create your context definition and put it somewhere in your classpath. To actually create the context do:
 
   import org.springframework.core.io.Resource;
-  import springy.context.SpringyContext;
+  import springy.context.BSFSpringyContext;
 
   // ...
   Resource r = new ClassPathResource("/path/to/context_definition.rb");
