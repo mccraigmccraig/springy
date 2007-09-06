@@ -13,6 +13,11 @@ static_bean "springy.beans.Bean1" do |b|
     #b.aStaticField = 200
 end
 
+# just a disposer
+static_bean "springy.beans.Bean7" do |i,d|
+    d.disposerMethod
+end
+
 # verbose property syntax
 bean :'bean1-verbose', "springy.beans.Bean1" do |b|
     b.property :name => "bean2", :ref => "bean2"

@@ -7,6 +7,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.jruby.Ruby;
 import springy.context.RuntimeSpringyContext;
 import springy.beans.Bean6;
+import springy.beans.Bean1;
+import springy.beans.Bean7;
 
 /**
  * RefreshContextTests
@@ -96,5 +98,19 @@ public class RefreshContextTests
         Bean6 newChildBean = (Bean6) ctx.getBean( "bean6" );
         Assert.assertEquals( newChildBean.getCount() , 0 );
 
+    }
+
+    public void testStaticBeanDispose() throws Exception
+    {
+        RuntimeSpringyContext ctx = createContext();
+
+        int disposerCount = Bean7.getDisposerCount();
+
+        ctx.markDirty();
+        ctx.refreshAllDirtyContexts();
+
+        int newDisposerCount = Bean7.getDisposerCount();
+
+        Assert.assertEquals( newDisposerCount , disposerCount + 1 );
     }
 }

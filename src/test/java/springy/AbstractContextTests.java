@@ -39,7 +39,6 @@ public abstract class AbstractContextTests {
         assert b1.isBooleanProperty();
     }
 
-
     /*
     // why does this fail when run from maven?
     public void testStaticMethodWithParameters() {

@@ -236,12 +236,29 @@ module Springy
     #   static_bean("java.lang.System") do |b|
     #       b.setProperty("key", "value")
     #   end
-    def static_bean(classname) # :yields: bean
-        if block_given?
-            sb = StaticBean.new
-            yield sb
-            sb.invocations.each_pair do |name, parameters|
+    def static_bean(classname, &proc) # :yields: bean
+        if proc
+            init_invocations = StaticBean.new
+            dispose_invocations = StaticBean.new
+
+            if proc.arity == 1
+                proc.call( init_invocations )
+            elsif proc.arity == 2
+                proc.call( init_invocations , dispose_invocations )
+            else
+                raise "static_bean block must have 1 or 2 args. arg1 collects init invocations. arg2 collects dispose invocations"
+            end
+
+            init_invocations.invocations.each_pair do |name, parameters|
                 bean "org.springframework.beans.factory.config.MethodInvokingFactoryBean" do |mb|
+                    mb.targetClass = classname
+                    mb.targetMethod = name
+                    mb.arguments = parameters
+                end
+            end
+
+            dispose_invocations.invocations.each_pair do |name, parameters|
+                bean "springy.util.MethodInvokingDisposerBean" do |mb|
                     mb.targetClass = classname
                     mb.targetMethod = name
                     mb.arguments = parameters
