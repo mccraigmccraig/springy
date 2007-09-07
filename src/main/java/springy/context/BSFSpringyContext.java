@@ -119,8 +119,8 @@ public class BSFSpringyContext
             String springy = "load 'springy/context/springy_parse_prepare.rb'";
             String ctxt = IOHelper.inputStreamToString(contextResource.getInputStream());
 
-            bsfManager.eval("ruby", "(java-springy)", 1, 1, springy);
-            bsfManager.eval("ruby", "(java-context)", 1, 1, ctxt);
+            bsfManager.eval("ruby", "(springy-parse-prepare-fragment)", 1, 1, springy);
+            bsfManager.eval("ruby", contextResource.getFilename() , 1, 1, ctxt);
         } catch (BSFException e) {
             //JRubyHelper.printBsfException(e);
 

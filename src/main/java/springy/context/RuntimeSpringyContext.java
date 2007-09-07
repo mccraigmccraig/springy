@@ -93,8 +93,8 @@ public class RuntimeSpringyContext extends AbstractSpringyApplicationContext
         addGlobal("bean_factory", beanFactory);
 
         try {
-            runtime.evalScript(new StringReader(springy), "(springy)");
-            runtime.evalScript(new StringReader(ctxt), "(context)");
+            runtime.evalScript(new StringReader(springy), "(springy-parse-prepare-fragment)");
+            runtime.evalScript(new StringReader(ctxt), contextResource.getFilename() );
         } catch (RaiseException rex) {
 
             System.err.println(rex.getException().toString());
