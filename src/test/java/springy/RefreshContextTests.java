@@ -9,6 +9,7 @@ import springy.context.RuntimeSpringyContext;
 import springy.beans.Bean6;
 import springy.beans.Bean1;
 import springy.beans.Bean7;
+import springy.beans.Bean8;
 
 /**
  * RefreshContextTests
@@ -19,7 +20,7 @@ public class RefreshContextTests
     public RuntimeSpringyContext createContext() throws Exception {
         return new RuntimeSpringyContext(Ruby.getDefaultInstance(),
                 new ClassPathResource( "springy/parent_context.rb" ),
-                new ClassPathResource("springy/context.rb"));
+                new ClassPathResource("springy/child_context.rb"));
     }
 
     public void testContextChainCreation() throws Exception
@@ -72,6 +73,7 @@ public class RefreshContextTests
         Assert.assertNotSame( bean , newBean );
         Assert.assertEquals( 0 , newBean.getCount() );
     }
+
     public void testRefreshDirtyOnly() throws Exception
     {
         RuntimeSpringyContext ctx = createContext();
@@ -100,6 +102,33 @@ public class RefreshContextTests
 
     }
 
+    public void testRefreshDependent() throws Exception
+    {
+        RuntimeSpringyContext ctx = createContext();
+
+        Bean6 parentBean = (Bean6) ctx.getBeanAndMarkDirty( "parent_bean" );
+        parentBean.incrCount();
+        parentBean = (Bean6) ctx.getBean( "parent_bean" );
+        Assert.assertEquals( parentBean.getCount() , 1 );
+
+        // change the state of a bean in the child context, without dirtying it
+        Bean6 childBean = (Bean6)ctx.getBean( "bean6" );
+        childBean.incrCount();
+        childBean = (Bean6) ctx.getBean( "bean6" );
+        Assert.assertEquals( childBean.getCount() , 1 );
+
+        ctx.refreshAllDirtyContexts();
+
+        // check that the bean from the parent context has been renewed
+        Bean6 newParentBean = (Bean6) ctx.getBean( "parent_bean" );
+        Assert.assertEquals( newParentBean.getCount() , 0 );
+
+        // check that the bean from the child context has also been renewed
+        Bean6 newChildBean = (Bean6) ctx.getBean( "bean6" );
+        Assert.assertEquals( newChildBean.getCount() , 0 );
+
+    }
+
     public void testStaticBeanDispose() throws Exception
     {
         RuntimeSpringyContext ctx = createContext();
@@ -113,4 +142,27 @@ public class RefreshContextTests
 
         Assert.assertEquals( newDisposerCount , disposerCount + 1 );
     }
+
+    public void testDependentBean() throws Exception
+    {
+        RuntimeSpringyContext ctx = createContext();
+
+        Bean6 parent = (Bean6) ctx.getBeanAndMarkDirty( "parent_bean" );
+        parent.incrCount();
+        Assert.assertEquals( parent.getCount() , 1 );
+
+        Bean8 bean8 = (Bean8)ctx.getBean( "bean8" );
+        Assert.assertSame( bean8.getBean6() , parent );
+
+        ctx.refreshAllDirtyContexts();
+
+        Bean8 newBean8 = (Bean8)ctx.getBean( "bean8" );
+        Bean6 newParent = newBean8.getBean6();
+
+        Assert.assertNotSame( parent , newParent );
+        Assert.assertNotSame( bean8 , newBean8 );
+
+        Assert.assertEquals( newParent.getCount() , 0 );
+    }
+
 }

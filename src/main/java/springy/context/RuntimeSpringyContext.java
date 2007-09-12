@@ -80,6 +80,8 @@ public class RuntimeSpringyContext extends AbstractSpringyApplicationContext
         this.runtime = runtime;
         this.contextResource = thisContextResource( contextResources );
 
+        this.setDisplayName( contextResource.getDescription() );
+
         if (refresh) {
             refresh();
         }
@@ -94,7 +96,7 @@ public class RuntimeSpringyContext extends AbstractSpringyApplicationContext
 
         try {
             runtime.evalScript(new StringReader(springy), "(springy-parse-prepare-fragment)");
-            runtime.evalScript(new StringReader(ctxt), contextResource.getFilename() );
+            runtime.evalScript(new StringReader(ctxt), contextResource.getDescription() );
         } catch (RaiseException rex) {
 
             System.err.println(rex.getException().toString());

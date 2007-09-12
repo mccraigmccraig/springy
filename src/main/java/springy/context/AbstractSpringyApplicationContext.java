@@ -7,6 +7,9 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ByteArrayResource;
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * AbstractSpringyApplicationContext
  */
@@ -79,32 +82,76 @@ public abstract class AbstractSpringyApplicationContext
         throw new NoSuchBeanDefinitionException( name );
     }
 
-    synchronized private void refreshIfDirty()
+    /** refresh this context if it has been marked dirty, or it's dependencies have been refreshed
+     * @return true if the context was refreshed */
+    synchronized private boolean refreshIfNeeded( boolean dependencyRefreshed )
     {
-        if ( dirty )
+        if ( dirty || dependencyRefreshed )
         {
             refresh();
             dirty = false;
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
-    /** ascends the chain of contexts, refreshing any ApplicationCntexts containing beans
-     * marked as dirty [ by a <code>getBeanAndDirty</code> call ]
+    /** descends the chain of contexts from the root, refreshing any ApplicationContexts containing beans
+     * marked as dirty [ by a <code>getBeanAndDirty</code> call ], and their dependent ApplicationContexts 
      */
     public void refreshAllDirtyContexts()
     {
         ApplicationContext context = this;
 
+        // get a list of the chain of ApplicationContexts
+        List<ApplicationContext> contextList = new ArrayList<ApplicationContext>();
         while( context != null )
         {
+            contextList.add( context );
+            context = context.getParent();
+        }
+
+        // go from root to leaf [i.e. reverse list order],
+        // looking for dirty contexts. once a dirty countext
+        // is found, refresh all contexts from there to [including] the leaf
+
+        boolean refresh = false;
+        for( int i = contextList.size() - 1 ; i>= 0 ; i-- )
+        {
+            context = contextList.get( i );
+
             if ( context instanceof AbstractSpringyApplicationContext )
             {
                 AbstractSpringyApplicationContext rsc = (AbstractSpringyApplicationContext)context;
-                rsc.refreshIfDirty();
-            }
+                refresh = refresh | rsc.refreshIfNeeded( refresh );
 
-            context = context.getParent();
+                if ( refresh )
+                {
+                    // System.err.println( "refreshing SpringyApplicationContext: " + rsc.getDisplayName() );
+                }
+            }
+            else if ( context instanceof AbstractRefreshableApplicationContext )
+            {
+                AbstractRefreshableApplicationContext rc = (AbstractRefreshableApplicationContext)context;
+                if ( refresh )
+                {
+                    rc.refresh();
+                    // System.err.println( "refreshing AbstractRefreshableApplicationContext: " + rc.getDisplayName() );
+                }
+            }
+            else
+            {
+                if ( refresh )
+                {
+                    throw new IllegalStateException( "dependent ApplicationContext has been refreshed, so this ApplicationContext requires refresh, but doesn't support it: " + context.getDisplayName() );
+                }
+            }
         }
+
+
+
     }
 
 }

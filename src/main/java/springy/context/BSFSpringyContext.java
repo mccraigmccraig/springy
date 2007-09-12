@@ -89,7 +89,8 @@ public class BSFSpringyContext
         this.bsfManager = bsfManager;
 
         this.contextResource = thisContextResource( contextResources );
-
+        this.setDisplayName( contextResource.getDescription() );
+        
         if (refresh) {
             refresh();
         }
@@ -120,7 +121,7 @@ public class BSFSpringyContext
             String ctxt = IOHelper.inputStreamToString(contextResource.getInputStream());
 
             bsfManager.eval("ruby", "(springy-parse-prepare-fragment)", 1, 1, springy);
-            bsfManager.eval("ruby", contextResource.getFilename() , 1, 1, ctxt);
+            bsfManager.eval("ruby", contextResource.getDescription() , 1, 1, ctxt);
         } catch (BSFException e) {
             //JRubyHelper.printBsfException(e);
 

@@ -83,3 +83,7 @@ before_init do |b, n|
 end
 
 bean :bean6, "springy.beans.Bean6"
+
+#bean :bean8, "springy.beans.Bean8" do |b|
+#    b.new( :parent_bean )
+#end

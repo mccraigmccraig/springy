@@ -4,6 +4,7 @@ package springy.beans;
  * Bean7
  */
 public class Bean7
+    implements IBean
 {
     public static int disposerCount;
 
