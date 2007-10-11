@@ -44,6 +44,13 @@ public abstract class AbstractSpringyApplicationContext
         dirty = true;
     }
 
+    public boolean isDirty()
+    {
+        SpringyApplicationContext parent = (SpringyApplicationContext) getParent();
+
+        return dirty || ( parent != null && parent.isDirty() );
+    }
+
     private Object getBeanAndMarkDirtyImpl( String name ) throws BeansException
     {
         Object bean = getBean( name );
@@ -97,6 +104,7 @@ public abstract class AbstractSpringyApplicationContext
             return false;
         }
     }
+
 
     /** descends the chain of contexts from the root, refreshing any ApplicationContexts containing beans
      * marked as dirty [ by a <code>getBeanAndDirty</code> call ], and their dependent ApplicationContexts 

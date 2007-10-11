@@ -28,4 +28,7 @@ public interface SpringyApplicationContext extends ConfigurableApplicationContex
 
     /** ascend the parent chain, refreshing all contexts marked as dirty */
     void refreshAllDirtyContexts();
+
+    /** @return true if any of the contexts in the hierarchy are dirty */
+    boolean isDirty();
 }
