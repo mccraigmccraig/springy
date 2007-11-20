@@ -19,6 +19,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 import springy.util.IOHelper;
+import springy.util.JRubyHelper;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -92,7 +93,7 @@ public class RuntimeSpringyContext extends AbstractSpringyApplicationContext
         String springy = "load 'springy/context/springy_parse_prepare.rb'";
         String ctxt = IOHelper.inputStreamToString(contextResource.getInputStream());
 
-        addGlobal("bean_factory", beanFactory);
+        JRubyHelper.addGlobal(runtime, "bean_factory", beanFactory);
 
         try {
             runtime.evalScript(new StringReader(springy), "(springy-parse-prepare-fragment)");
@@ -145,19 +146,5 @@ public class RuntimeSpringyContext extends AbstractSpringyApplicationContext
             serializedContext = a.get(0).toString();
             serializedContextAsDocument = (Document) a.get(1);
         }
-    }
-
-    private void addGlobal(String name, final Object o) {
-
-        runtime.getGlobalVariables().defineReadonly(GlobalVariable.variableName(name),
-                new IAccessor() {
-                    public IRubyObject getValue() {
-                        return JavaEmbedUtils.javaToRuby( runtime, o );
-                    }
-                    public IRubyObject setValue(IRubyObject newValue) {
-                        return newValue;
-                    }
-                });
-
     }
 }
