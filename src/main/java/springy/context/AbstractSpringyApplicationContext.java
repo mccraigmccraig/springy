@@ -1,6 +1,7 @@
 package springy.context;
 
 import org.springframework.context.support.AbstractRefreshableApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -158,8 +159,33 @@ public abstract class AbstractSpringyApplicationContext
             }
         }
 
-
-
+        if ( refresh )
+        {
+            this.publishEvent( new SpringyContextChainRefreshEvent(this) );
+        }
     }
+
+    public void init()
+    {
+        List<AbstractApplicationContext> contextList = new ArrayList<AbstractApplicationContext>();
+
+        ApplicationContext ctx = this;
+        while( ctx != null )
+        {
+            if ( ctx instanceof AbstractApplicationContext )
+            {
+                contextList.add(0 , (AbstractApplicationContext) ctx );
+            }
+            ctx = ctx.getParent();
+        }
+
+        for( AbstractApplicationContext refreshCtx : contextList )
+        {
+            refreshCtx.refresh();
+        }
+
+        this.publishEvent( new SpringyContextChainRefreshEvent(this) );
+    }
+
 
 }
