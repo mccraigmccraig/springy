@@ -29,4 +29,10 @@ public class XmlContextTests extends AbstractContextTests {
     protected ConfigurableApplicationContext createContext() {
         return new ClassPathXmlApplicationContext(new String[]{"springy/context.xml"}, true);
     }
+
+
+  protected ConfigurableApplicationContext createContext(String context) throws Exception
+  {
+    return null;
+  }
 }

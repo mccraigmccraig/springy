@@ -7,9 +7,10 @@ import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.annotations.AfterClass;
+import org.jruby.Ruby;
 import springy.beans.Bean1;
 import springy.beans.Bean4;
-import springy.context.BSFSpringyContext;
+import springy.context.RuntimeSpringyContext;
 
 import java.util.Map;
 
@@ -31,11 +32,18 @@ public class SpringyContextTests extends AbstractContextTests {
         ctxt.close();
     }
 
-    protected ConfigurableApplicationContext createContext() throws Exception {
-        return new BSFSpringyContext(new ClassPathResource("springy/context.rb"));
+  /** create from a file */
+  protected ConfigurableApplicationContext createContext() throws Exception {
+        return new RuntimeSpringyContext(Ruby.getDefaultInstance(),
+                new ClassPathResource("springy/context.rb"));
     }
 
-    public void testInlineXml() {
+  /** create directly from a string */
+  protected ConfigurableApplicationContext createContext( String context ) throws Exception {
+      return new RuntimeSpringyContext( Ruby.getDefaultInstance() , context );
+    }
+
+  public void testInlineXml() {
         Bean1 bean12 = (Bean1) ctxt.getBean("bean1-2");
         assert bean12 != null;
         Bean1 bean13 = (Bean1) ctxt.getBean("bean1-3");
@@ -47,13 +55,13 @@ public class SpringyContextTests extends AbstractContextTests {
         assertEquals( bean1.something , 22 );
     }
 
-    public void testErrorWithEmptyListsInCtor() {
+    public void testErrorWithEmptyListsInCtor() throws Exception {
         String context =
                 "bean :bean1_emptylist_in_ctor, \"springy.beans.Bean4\" do |b|\n" +
                         "    b.new(\"name\", {}, [])\n" +
                         "end";
 
-        BSFSpringyContext ctxt = new BSFSpringyContext(context);
+      ConfigurableApplicationContext ctxt = createContext(context);
 
         Bean4 b4 = (Bean4) ctxt.getBean("bean1_emptylist_in_ctor");
         assert b4.getMap().isEmpty();
@@ -71,19 +79,19 @@ public class SpringyContextTests extends AbstractContextTests {
     }
 
     @Test(expectedExceptions = BeanDefinitionParsingException.class)
-    public void testEnforceInit() {
+    public void testEnforceInit() throws Exception {
         String context = "bean :bean1, \"springy.beans.Bean1\", :init_method=\"jjlkjkl\"";
-        BSFSpringyContext ctxt = new BSFSpringyContext(context);
+        ConfigurableApplicationContext ctxt = createContext(context);
     }
 
-    public void testBeanWithoutBlock() {
+    public void testBeanWithoutBlock() throws Exception {
         String context = "bean :a_bean, \"springy.beans.Bean1\"";
-        BSFSpringyContext ctxt = new BSFSpringyContext(context);
+        ConfigurableApplicationContext ctxt = createContext(context);
     }
 
-    public void testResourceExists() {
+    public void testResourceExists() throws Exception {
         String context = "bean :bean1, 'springy.beans.Bean1' if resource_exists?('/springy/a_map.yml')";
-        BSFSpringyContext ctxt = new BSFSpringyContext(context);
+      ConfigurableApplicationContext ctxt = createContext(context);
         assert ctxt.getBean("bean1") instanceof Bean1;
     }
 

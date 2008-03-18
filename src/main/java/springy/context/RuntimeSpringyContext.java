@@ -96,8 +96,8 @@ public class RuntimeSpringyContext extends AbstractSpringyApplicationContext
         JRubyHelper.addGlobal(runtime, "bean_factory", beanFactory);
 
         try {
-            runtime.evalScript(new StringReader(springy), "(springy-parse-prepare-fragment)");
-            runtime.evalScript(new StringReader(ctxt), contextResource.getDescription() );
+            runtime.executeScript( springy, "(springy-parse-prepare-fragment)");
+            runtime.executeScript( ctxt, contextResource.getDescription() );
         } catch (RaiseException rex) {
 
             System.err.println(rex.getException().toString());
@@ -142,7 +142,7 @@ public class RuntimeSpringyContext extends AbstractSpringyApplicationContext
             if (!isActive())
                 refreshBeanFactory();
 
-            RubyArray a = (RubyArray) runtime.evalScript("serialize_context");
+            RubyArray a = (RubyArray) runtime.evalScriptlet("serialize_context");
             serializedContext = a.get(0).toString();
             serializedContextAsDocument = (Document) a.get(1);
         }

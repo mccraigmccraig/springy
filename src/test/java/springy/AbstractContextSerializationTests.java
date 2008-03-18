@@ -43,7 +43,12 @@ public abstract class AbstractContextSerializationTests extends AbstractContextT
 
     protected abstract SpringyApplicationContext doCreateContext();
 
-    protected ConfigurableApplicationContext createContext() throws Exception {
+  protected ConfigurableApplicationContext createContext(String context) throws Exception
+  {
+    return null;
+  }
+
+  protected ConfigurableApplicationContext createContext() throws Exception {
         //create a jruby context, serialize it to xml, and recreate context from xml
         SpringyApplicationContext jrubyCtxt = doCreateContext();
         serializedContext = jrubyCtxt.getContextAsXml();

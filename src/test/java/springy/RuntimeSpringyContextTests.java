@@ -11,9 +11,14 @@ import springy.beans.Bean6;
 @Test
 public class RuntimeSpringyContextTests extends SpringyContextTests {
 
-    protected ConfigurableApplicationContext createContext() throws Exception {
+  /** create from a file */
+  protected ConfigurableApplicationContext createContext() throws Exception {
         return new RuntimeSpringyContext(Ruby.getDefaultInstance(),
                 new ClassPathResource("springy/context.rb"));
     }
 
+  /** create directly from a string */  
+  protected ConfigurableApplicationContext createContext( String context ) throws Exception {
+      return new RuntimeSpringyContext( Ruby.getDefaultInstance() , context );
+    }
 }

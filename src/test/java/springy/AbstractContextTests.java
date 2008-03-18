@@ -20,6 +20,7 @@ public abstract class AbstractContextTests {
     protected ConfigurableApplicationContext ctxt;
 
     protected abstract ConfigurableApplicationContext createContext() throws Exception;
+    protected abstract ConfigurableApplicationContext createContext( String context ) throws Exception;
 
     public void testGetBeans() throws Exception {
         assert ctxt != null : getClass().getSimpleName();

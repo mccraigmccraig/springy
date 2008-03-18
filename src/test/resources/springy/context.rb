@@ -60,9 +60,16 @@ bean :bean4, "springy.beans.Bean4" do
     }
 end
 
+map = yaml( "/springy/a_map.yml" )
+
 bean :bean4_yaml, "springy.beans.Bean4" do |b|
-    b.new("Steve", yaml("/springy/a_map.yml")) 
+    b.new("Steve", map )
 end
+
+## EVIL this fails for some reason, tho creating the map in two, as above works
+#bean :bean4_yaml, "springy.beans.Bean4" do |b|
+#    b.new("Steve", yaml( "/springy/a_map.yml" ) )
+#end
 
 bean :bean5, "springy.beans.Bean5", :scope=>'prototype', :init_method=>'myInit', :destroy_method=>'myDestroy', :dependency_check=>'simple', :lazy_init=>true, :abstract=>true, :autowire=>'byType'
 

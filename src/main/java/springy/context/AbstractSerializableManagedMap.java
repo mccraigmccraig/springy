@@ -14,8 +14,4 @@ public abstract class AbstractSerializableManagedMap extends ManagedMap implemen
     public AbstractSerializableManagedMap(int initialCapacity) {
         super(initialCapacity);
     }
-
-    public AbstractSerializableManagedMap(Map targetMap) {
-        super(targetMap);
-    }
 }
