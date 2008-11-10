@@ -5,6 +5,7 @@ require 'jerbil/javac_task'
 require 'jerbil/testng_task'
 require 'jerbil/javadoc_task'
 require 'jerbil/jar_task'
+require 'jerbil/dependency_task'
 
 MAIN_SOURCE_DIR     = "src/main/java"
 MAIN_RESOURCES_DIR  = "src/main/resources"
@@ -23,6 +24,7 @@ TESTOUTPUT          = File.join(Rake.original_dir, "test-output")
 
 
 CLEAN.include(BUILD_DIR,DIST_DIR)
+Jerbil::DependencyTask.load
 
 load_jvm(CLASSPATH, JAVA_BUILD_DIR, :loggingprops => "logging.properties")
 
