@@ -1,0 +1,11 @@
+jruby:
+    svn:        http://svn.codehaus.org/jruby/tags/jruby-1_1_5
+    tag:        jruby_1_1_5
+    destdir:    jruby-src
+    buildcmd:   ant jar-complete
+spring:
+    cvs:        ":pserver:anonymous@springframework.cvs.sourceforge.net:/cvsroot/springframework"
+    tag:        release-2-5-2
+    destdir:    spring2-src
+    module:     spring
+        
