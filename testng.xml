@@ -5,21 +5,12 @@
     <test name="springy context tests">
         <classes>
             <class name="springy.SpringyContextTests"/>
-            <class name="springy.SpringyContextSerializationTests"/>
         </classes>
     </test>
 
     <test name="runtime springy context tests">
         <classes>
             <class name="springy.RuntimeSpringyContextTests"/>
-            <class name="springy.RuntimeSpringyContextSerializationTests"/>
-        </classes>
-    </test>
-
-
-    <test name="xml context tests">
-        <classes>
-            <class name="springy.XmlContextTests"/>
         </classes>
     </test>
 

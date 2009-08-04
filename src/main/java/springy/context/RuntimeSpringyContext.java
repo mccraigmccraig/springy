@@ -33,9 +33,23 @@ import java.util.HashSet;
  * to use this instead of creating a new one.
  *
  */
-public class RuntimeSpringyContext extends AbstractSpringyApplicationContext
-        implements SpringyApplicationContext {
+public class RuntimeSpringyContext extends AbstractRefreshableApplicationContext 
+{
 
+    public static Resource[] stringArrayToResourceArray( String... context )
+    {
+        Resource[] resources = new Resource[ context.length ];
+        for(int i = 0 ; i < context.length ; i++ )
+        {
+            resources[ i ] = new ByteArrayResource( context[ i ].getBytes() );
+        }
+        return resources;
+    }
+
+    public static Resource thisContextResource( Resource... resources )
+    {
+        return resources[ resources.length -1 ];
+    }
 
     private static RuntimeSpringyContext parentContext( Ruby runtime, boolean refresh,  Resource... resources )
     {
@@ -93,6 +107,7 @@ public class RuntimeSpringyContext extends AbstractSpringyApplicationContext
 	
         String prepareScript = "load 'springy/context/springy_parse_prepare.rb'";
         String ctxt = IOHelper.inputStreamToString(contextResource.getInputStream());
+	String afterLoadScript = "load 'springy/context/springy_after_load.rb'";
 
 	String ctxtFile = (contextResource instanceof FileSystemResource) ? ((FileSystemResource)contextResource).getPath() : contextResource.getDescription();
 
@@ -101,6 +116,7 @@ public class RuntimeSpringyContext extends AbstractSpringyApplicationContext
         try {
             runtime.executeScript( prepareScript, "(springy-parse-prepare-fragment)");
             runtime.executeScript( ctxt, ctxtFile );
+	    runtime.executeScript( afterLoadScript, "(springy-after-load-fragment)");
         } catch (RaiseException rex) {
 
             System.err.println(rex.getException().toString());
@@ -125,29 +141,5 @@ public class RuntimeSpringyContext extends AbstractSpringyApplicationContext
                             new Location(contextResource, lastLine)));
         }
 
-    }
-
-    public String getContextAsXml() {
-        serializeContext();
-        return serializedContext;
-    }
-
-    public Document getContextAsDocument() {
-        serializeContext();
-        return serializedContextAsDocument;
-    }
-
-    /**
-     * Serializes the context to XML.
-     */
-    private synchronized void serializeContext() {
-        if (serializedContext == null || serializedContextAsDocument == null) {
-            if (!isActive())
-                refreshBeanFactory();
-
-            RubyArray a = (RubyArray) runtime.evalScriptlet("serialize_context");
-            serializedContext = a.get(0).toString();
-            serializedContextAsDocument = (Document) a.get(1);
-        }
     }
 }

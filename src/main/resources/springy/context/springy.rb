@@ -1,16 +1,28 @@
 require 'java'
 require 'yaml'
 
-require 'springy/context/serialization'
-
 # This module defines all DSL methods plus supporting classes.
 module Springy
 
+  AFTER_LOAD_PROCS = []
+
+  def self.reset!()
+    $initializers = {}
+    $springy_before_init = nil
+    AFTER_LOAD_PROCS.clear
+  end
+
+  def self.run_after_load_procs
+    AFTER_LOAD_PROCS.each{ |p| p.call }
+  end
+
     #-- Java imports
     # :stopdoc:
-    PropertyValue                = org.springframework.beans.PropertyValue
-    RuntimeBeanReference         = org.springframework.beans.factory.config.RuntimeBeanReference
-    BeanDefinitionParserDelegate = org.springframework.beans.factory.xml.BeanDefinitionParserDelegate
+    PropertyValue                = ::Java::OrgSpringframeworkBeans::PropertyValue
+    RuntimeBeanReference         = ::Java::OrgSpringframeworkBeansFactoryConfig::RuntimeBeanReference
+    BeanDefinitionParserDelegate = ::Java::OrgSpringframeworkBeansFactoryXml::BeanDefinitionParserDelegate
+    ManagedMap                   = ::Java::OrgSpringframeworkBeansFactorySupport::ManagedMap
+    ManagedList                  = ::Java::OrgSpringframeworkBeansFactorySupport::ManagedList
 
     # :startdoc:
 
@@ -26,7 +38,8 @@ module Springy
 
     # A Springy specific bean definition, subclassing Spring's RootBeanDefinition.
     #
-    class BeanDef < Java::springy.context.AbstractSerializableRootBeanDefinition
+    class BeanDef < Java::org.springframework.beans.factory.support.RootBeanDefinition
+
         attr_reader :bean_id
 
         AUTOWIRE_MODES = {
@@ -88,10 +101,10 @@ module Springy
         # Sets a property on a bean.
         def property(args)
             if args.has_key?(:ref) || args[:value].kind_of?(Symbol)
-                ref = SerializableRuntimeBeanReference.new(args[:ref] || args[:value].to_s)
-                get_property_values.add_property_value(SerializablePropertyValue.new(args[:name], ref))
+                ref = RuntimeBeanReference.new(args[:ref] || args[:value].to_s)
+                get_property_values.add_property_value(PropertyValue.new(args[:name], ref))
             elsif args.has_key?(:value)
-                get_property_values.add_property_value(SerializablePropertyValue.new(args[:name], wrap(args[:value])))
+                get_property_values.add_property_value(PropertyValue.new(args[:name], wrap(args[:value])))
             end
             self
         end
@@ -146,19 +159,19 @@ module Springy
         val = obj
         case val
         when Array
-            list = SerializableManagedList.new
+            list = ManagedList.new
             val.each do |v|
                 list.add(wrap(v))
             end
             val = list
         when Hash
-            map = SerializableManagedMap.new
+            map = ManagedMap.new
             val.each_pair do |k,v|
                 map.put(wrap(k), wrap(v))
             end
             val = map
         when Symbol
-            val = SerializableRuntimeBeanReference.new(val.to_s)
+            val = RuntimeBeanReference.new(val.to_s)
         when Proc
             val = wrap(val.call)
         when Numeric
