@@ -17,6 +17,7 @@ import org.springframework.context.support.AbstractRefreshableApplicationContext
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
 import org.w3c.dom.Document;
 import springy.util.IOHelper;
 import springy.util.JRubyHelper;
@@ -89,15 +90,17 @@ public class RuntimeSpringyContext extends AbstractSpringyApplicationContext
     }
 
     protected void loadBeanDefinitions(final DefaultListableBeanFactory beanFactory) throws IOException, BeansException {
-
-        String springy = "load 'springy/context/springy_parse_prepare.rb'";
+	
+        String prepareScript = "load 'springy/context/springy_parse_prepare.rb'";
         String ctxt = IOHelper.inputStreamToString(contextResource.getInputStream());
+
+	String ctxtFile = (contextResource instanceof FileSystemResource) ? ((FileSystemResource)contextResource).getPath() : contextResource.getDescription();
 
         JRubyHelper.addGlobal(runtime, "bean_factory", beanFactory);
 
         try {
-            runtime.executeScript( springy, "(springy-parse-prepare-fragment)");
-            runtime.executeScript( ctxt, contextResource.getDescription() );
+            runtime.executeScript( prepareScript, "(springy-parse-prepare-fragment)");
+            runtime.executeScript( ctxt, ctxtFile );
         } catch (RaiseException rex) {
 
             System.err.println(rex.getException().toString());
