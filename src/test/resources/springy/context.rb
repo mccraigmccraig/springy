@@ -89,6 +89,10 @@ before_init do |b, n|
     b.set_before_init_called if b.respond_to?(:set_before_init_called)
 end
 
+after_load do
+  ::Java::Springy::AbstractContextTests.setAfterLoadBlockCalled
+end
+
 bean :bean6, "springy.beans.Bean6"
 
 #bean :bean8, "springy.beans.Bean8" do |b|

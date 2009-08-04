@@ -114,5 +114,16 @@ public abstract class AbstractContextTests {
         assert b1.wasDestroyed();
     }
 
+    private static boolean afterLoadBlockCalled = false;
+
+    public static void setAfterLoadBlockCalled()
+    {
+	afterLoadBlockCalled = true;
+    }
+
+    public void testAfterLoadBlockCalled() throws Exception {
+        ConfigurableApplicationContext context = createContext();
+	assert afterLoadBlockCalled;
+    }
 
 }

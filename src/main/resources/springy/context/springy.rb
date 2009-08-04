@@ -302,6 +302,11 @@ module Springy
         bean_factory.add_bean_post_processor(processor)
     end
 
+    # register a proc for calling after context definition file loading
+    def after_load(&proc)
+      AFTER_LOAD_PROCS << proc
+    end
+
     # Deserializes classpath resource +resource+.
     def yaml(resource)
         YAML.load(get_resource(resource))
