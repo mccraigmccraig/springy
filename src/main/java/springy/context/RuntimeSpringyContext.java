@@ -103,6 +103,11 @@ public class RuntimeSpringyContext extends AbstractRefreshableApplicationContext
         }
     }
 
+    public Ruby getRuntime()
+    {
+        return runtime;
+    }
+
     protected void loadBeanDefinitions(final DefaultListableBeanFactory beanFactory) throws IOException, BeansException {
 	
         String prepareScript = "load 'springy/context/springy_parse_prepare.rb'";
